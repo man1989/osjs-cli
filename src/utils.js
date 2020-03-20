@@ -102,15 +102,15 @@ const createOptions = options => ({
 
 const resolveOptions = (options, include) => {
   const newOptions = {...options};
-
   const config = {
     discover: [
       path.resolve(newOptions.root, 'node_modules')
     ],
+    routes: path.resolve(options.root),
     ...newOptions.config,
     ...include
   };
-
+  config.routes = path.resolve(config.routes, "routes.json")
   newOptions.config = config;
   newOptions.config.discover = [
     path.resolve(newOptions.root, 'node_modules'),

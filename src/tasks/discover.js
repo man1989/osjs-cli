@@ -112,6 +112,7 @@ const action = async ({logger, options, args, commander}) => {
   const copyFiles = args.copy === true;
   const relativeSymlinks = !copyFiles && args.relative === true;
   const discoveryDest = path.resolve(args.discover || options.packages);
+  
 
   logger.info('Discovering packages...');
   logger.info('Destination discovery map', discoveryDest);
@@ -128,11 +129,17 @@ const action = async ({logger, options, args, commander}) => {
   const discovery = packages.map(pkg => pkg.filename)
     .map(filename => path.relative(options.root, filename));
 
+  const routes = packages.map(({ meta, filename }) => {
+    const routePath = meta.server && meta.server.router;
+    if (routePath) {
+      return path.join(filename, routePath);
+    }
+  }).filter(r=>r);
+  
   const manifest = packages.map(({meta}) => {
     const override = options.config.metadata
       ? options.config.metadata.override[meta.name]
       : null;
-
     if (override) {
       logger.warn(`Metadata for '${meta.name}' was overridden from CLI config!`);
     }
@@ -184,6 +191,7 @@ const action = async ({logger, options, args, commander}) => {
 
   await Promise.all(discover());
   await fs.writeJson(discoveryDest, discovery);
+  await fs.writeJson(options.config.routes, routes);
   await fs.writeJson(dist.metadata, manifest);
 
   logger.success(packages.length + ' package(s) discovered.');
