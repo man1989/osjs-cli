@@ -144,7 +144,7 @@ const scaffoldPackage = type => async ({logger, options, args}) => {
 
   const additions = type === 'iframe-application'
     ? ['data/index.html']
-    : ['server.js', 'index.scss'];
+    : ['index.scss'];
 
   const files = [
     'index.js',
