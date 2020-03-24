@@ -2,7 +2,9 @@
   "type": "application",
   "name": "___NAME___",
   "category": null,
-  "server": "server.js",
+  "server": {
+    "router": "route.js"
+  },
   "title": {
     "en_EN": "___NAME___"
   },
