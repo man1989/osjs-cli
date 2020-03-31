@@ -132,7 +132,7 @@ const action = async ({logger, options, args, commander}) => {
   const routes = packages.map(({ meta, filename }) => {
     const routePath = meta.server && meta.server.router;
     if (routePath) {
-      return path.join(filename, routePath);
+      return path.relative(options.root, path.join(filename, routePath));
     }
   }).filter(r=>r);
   
